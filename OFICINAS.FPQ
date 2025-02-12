@@ -1,0 +1,92 @@
+
+* WIZNAME = WZ_BQUER
+* VERSION = 1.0
+* TIMESTAMP = 791438260.0000
+* CLIENTSERVER =
+* TABLES = C:\SIAF\DBFS\ACTUAL.DBF;C:\SIAF\DBFS\RESP.DBF;C:\SIAF\DBFS\OFICINA.DBF
+* JOINS = Resp;Codofic;Actual;Codofic;0
+* JOINS = Oficina;Codofic;Actual;Codofic;0
+* FIELDS = Actual.partida;Actual.codcont;Actual.codaux;Actual.codigo;Actual.vidautil;Actual.descrip;Actual.costo;Actual.mes;Actual.ano;Actual.b_rev;Actual.dia;Actual.codofic;Actual.codresp;Actual.observ;Actual.feult;Actual.usuar;Oficina.nomofic
+* FIELDS = Resp.nomresp
+* SORT FIELDS = 
+* GROUP = 
+* SQL = SQL Select statement for Mailmerge Wizard:
+* SELECT Actual.partida,Actual.codcont,Actual.codaux,Actual.codigo,Actual.vidautil,Actual.descrip,Actual.costo,Actual.mes,Actual.ano,Actual.b_rev,Actual.dia,Actual.codofic,Actual.codresp,Actual.observ,Actual.feult,Actual.usuar,Oficina.nomofic,;
+*		Resp.nomresp;
+*	FROM C:\SIAF\DBFS\ACTUAL.DBF,C:\SIAF\DBFS\RESP.DBF,C:\SIAF\DBFS\OFICINA.DBF;
+*	WHERE Actual.Codofic = Resp.Codofic AND Actual.Codofic = Oficina.Codofic;
+*	INTO CURSOR OFICINAS
+
+IF !USED("Actual")
+	SELECT 0
+	USE (LOCFILE("C:\SIAF\DBFS\ACTUAL.DBF","DBF","Where is Actual.DBF ?")) AGAIN ALIAS Actual
+ELSE
+	SELECT Actual
+	SET RELATION TO
+	SET SKIP TO
+	SET ORDER TO
+	SET FILTER TO
+ENDIF
+IF !USED("Resp")
+	SELECT 0
+	USE (LOCFILE("C:\SIAF\DBFS\RESP.DBF","DBF","Where is Resp.DBF ?")) AGAIN ALIAS Resp
+ELSE
+	SELECT Resp
+	SET RELATION TO
+	SET SKIP TO
+	SET ORDER TO
+	SET FILTER TO
+ENDIF
+IF !USED("Oficina")
+	SELECT 0
+	USE (LOCFILE("C:\SIAF\DBFS\OFICINA.DBF","DBF","Where is Oficina.DBF ?")) AGAIN ALIAS Oficina
+ELSE
+	SELECT Oficina
+	SET RELATION TO
+	SET SKIP TO
+	SET ORDER TO
+	SET FILTER TO
+ENDIF
+SELECT Resp
+m.i=1
+DO WHILE !EMPTY(KEY(m.i))
+	IF NORMALIZE(KEY(m.i))="CODOFIC"
+		SET ORDER TO m.i
+		EXIT
+	ENDIF
+	m.i=m.i+1
+ENDDO
+IF EMPTY(SET("ORDER"))
+	IF SYS(2011)#"Exclusive"
+		USE DBF(ALIAS()) EXCLUSIVE AGAIN ALIAS (ALIAS())
+	ENDIF
+	INDEX ON Codofic TAG Codofic && Codofic
+ENDIF
+SELECT Actual	&&Parent Area
+SET RELATION TO Codofic INTO Resp ADDITIVE
+SET FILTER TO FOUND("Resp")
+SELECT Oficina
+m.i=1
+DO WHILE !EMPTY(KEY(m.i))
+	IF NORMALIZE(KEY(m.i))="CODOFIC"
+		SET ORDER TO m.i
+		EXIT
+	ENDIF
+	m.i=m.i+1
+ENDDO
+IF EMPTY(SET("ORDER"))
+	IF SYS(2011)#"Exclusive"
+		USE DBF(ALIAS()) EXCLUSIVE AGAIN ALIAS (ALIAS())
+	ENDIF
+	INDEX ON Codofic TAG Codofic && Codofic
+ENDIF
+SELECT Actual	&&Parent Area
+SET RELATION TO Codofic INTO Oficina ADDITIVE
+SET FILTER TO FOUND("Oficina")
+SELECT Actual
+SET SKIP TO Resp,Oficina
+LOCATE
+SET FIELDS GLOBAL
+SET FIELDS TO
+SET FIELDS TO Actual.partida,Actual.codcont,Actual.codaux,Actual.codigo,Actual.vidautil,Actual.descrip,Actual.costo,Actual.mes,Actual.ano,Actual.b_rev,Actual.dia,Actual.codofic,Actual.codresp,Actual.observ,Actual.feult,Actual.usuar,Oficina.nomofic
+SET FIELDS TO Resp.nomresp

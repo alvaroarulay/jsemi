@@ -1,0 +1,16 @@
+*----------*
+CLOSE DATABASES
+*----------*
+SELECT 5010
+USE ESTADO EXCLUSIVE
+PACK 
+*
+GO BOTTOM
+IF RECNO()=3
+   APPEND BLANK 
+   REPLACE Codestado WITH 4
+   REPLACE Nomestado WITH "Baja"
+ENDIF
+*----------*
+CLOSE DATABASES
+*----------*

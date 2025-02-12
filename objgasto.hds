@@ -1,0 +1,4 @@
+[Columns settings]
+dbgr.GESTION=0,79,0,1,0,7,0
+dbgr.PARTIDA=1,81,0,1,0,7,0
+dbgr.DESCRIP=2,304,0,1,0,7,0
